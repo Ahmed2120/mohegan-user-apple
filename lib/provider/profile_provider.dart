@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_grocery/data/model/response/base/api_response.dart';
@@ -9,6 +10,10 @@ import 'package:flutter_grocery/data/repository/profile_repo.dart';
 import 'package:flutter_grocery/helper/api_checker.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../main.dart';
+import '../utill/app_constants.dart';
 
 class ProfileProvider with ChangeNotifier {
   final ProfileRepo? profileRepo;
@@ -21,6 +26,8 @@ class ProfileProvider with ChangeNotifier {
 
   getUserInfo() async {
     _isLoading = true;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    log('${preferences.getString(AppConstants.token)??"share token"} <---');
     ApiResponse apiResponse = await profileRepo!.getUserInfo();
     if (apiResponse.response != null &&
         apiResponse.response!.statusCode == 200) {
